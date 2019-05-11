@@ -1,0 +1,83 @@
+include ./header.pug
+style.
+    .media-list-stream .media-object {
+        border-radius: 0;
+    }
+    .prices ul {
+        list-style-type: none;
+        padding: 0;
+    }
+    .prices li {
+        margin-bottom: 2px;
+    }
+body.with-top-navbar
+
+nav.navbar.navbar-toggleable-sm.fixed-top.navbar-inverse.bg-primary.app-navbar
+    .container
+        span.navbar-brand Board Game Discounts
+
+.container.pt-4
+    .row
+        .col-lg-3
+            .card.card-profile.mb-4
+                //.card-header
+                .card-block.text-center
+                    h6.card-title Great Games At a Discount!
+                    p This is a list of games that are over 40% off in order of popularity.
+                    p This site is powered by 
+                        a(href="https://www.boardgameatlas.com") Board Game Atlas 
+                        | and their API.
+        .col-lg-6
+            ul.list-group.media-list.media-list-stream.mb-4
+                for game in games
+                    li.media.list-group-item.p-4
+                        img.media-object.d-flex.align-self-start.mr-3(src=game.image_url, target="_blank")
+                        .media-body
+                            .media-body-text
+                            .media-heading
+                                small.float-right.text-muted: a(href=game.url) More Info on BGA
+                                h6 #{game.name}
+                            .details
+                                p.mb-0 Price: $#{game.price}
+                                p Discount: #{(game.discount * 100).toFixed(0)}%
+                            p!= game.description.length > 140 ? game.description.slice(0, 140) + '...' : game.description
+                            button.see-all-prices.btn.btn-outline-primary.btn-sm(data-id=game.id) See All Prices
+
+        //.col-lg-3
+            .card.mb-4.hidden-md-down
+                .card-block
+                    h6.mb-3 Sponsored
+                    div(data-grid="images", data-target-height="150")
+                        img.media-object(data-width="640", data-height="640", data-action="zoom", src="/images/instagram_2.jpg")
+                    p
+                        strong It might be time to visit Iceland.
+                        | Iceland is so chill, and everything looks cool here. Also, we heard the people are pretty nice. What are you waiting for?
+                    button.btn.btn-outline-primary.btn-sm Buy a ticket
+
+    include ./footer.pug
+    script.
+        $('.see-all-prices').on('click', function() {
+            var gameId = $(this).data('id')
+            $(this).html('<span>Loading...</span>')
+            var url = 'https://www.boardgameatlas.com/api/game/prices?pretty=true&client_id=SB1VGnDv7M&game_id=' + gameId
+            $.ajax({
+                url: url,
+            })
+            .done(function( data ) {
+                var html = '<div class="prices"><ul>'
+                data.prices = data.prices.sort(function(a, b) {
+                    return a.price - b.price
+                })
+                for (var i = 0; i < data.prices.length; i++) {
+                    var price = data.prices[i];
+                    if (price.country != 'US') continue;
+                    html += '<li><a class="btn btn-outline-primary btn-sm" href="' + price.url + '" target="_blank">' + price.price_text + ' ' + price.store_name + '</a></li>'
+                }
+                if (data.prices.length == 0) {
+                    html += '<p>No current prices found.</p>'
+                }
+                html += '</ul></div>'
+
+                $('.see-all-prices[data-id="' + gameId + '"]').replaceWith(html)
+            });
+        })
