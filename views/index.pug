@@ -40,7 +40,7 @@ nav.navbar.navbar-toggleable-sm.fixed-top.navbar-inverse.bg-primary.app-navbar
                             .details
                                 p.mb-0 Price: $#{game.price}
                                 p Discount: #{(game.discount * 100).toFixed(0)}%
-                            p!= game.description.length > 140 ? game.description.slice(0, 140) + '...' : game.description
+                            p #{game.description_preview.length > 140 ? game.description_preview.slice(0, 140) + '...' : game.description_preview}
                             button.see-all-prices.btn.btn-outline-primary.btn-sm(data-id=game.id) See All Prices
 
         //.col-lg-3
