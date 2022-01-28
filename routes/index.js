@@ -4,7 +4,7 @@ var request = require('request');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-    request({ url: "https://www.boardgameatlas.com/api/search?order_by=popularity&gt_discount=0.4&client_id=55QzrLZsXp" } , function(err, response, jsonString) {
+    request({ url: "https://api.boardgameatlas.com/api/search?order_by=popularity&gt_discount=0.4&client_id=55QzrLZsXp" } , function(err, response, jsonString) {
         var json = JSON.parse(jsonString);
         var games = json.games
         var options = {
