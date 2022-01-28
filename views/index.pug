@@ -65,15 +65,15 @@ nav.navbar.navbar-toggleable-sm.fixed-top.navbar-inverse.bg-primary.app-navbar
             })
             .done(function( data ) {
                 var html = '<div class="prices"><ul>'
-                data.prices = data.prices.sort(function(a, b) {
+                data.gameWithPrices.us = data.gameWithPrices.us.sort(function(a, b) {
                     return a.price - b.price
                 })
-                for (var i = 0; i < data.prices.length; i++) {
-                    var price = data.prices[i];
+                for (var i = 0; i < data.gameWithPrices.us.length; i++) {
+                    var price = data.gameWithPrices.us[i];
                     if (price.country != 'US') continue;
                     html += '<li><a class="btn btn-outline-primary btn-sm" href="' + price.url + '" target="_blank">' + price.price_text + ' ' + price.store_name + '</a></li>'
                 }
-                if (data.prices.length == 0) {
+                if (data.gameWithPrices.us.length == 0) {
                     html += '<p>No current prices found.</p>'
                 }
                 html += '</ul></div>'
